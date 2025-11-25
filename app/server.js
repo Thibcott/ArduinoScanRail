@@ -13,13 +13,19 @@ const parser = port.pipe(new ReadlineParser({ delimiter: '\n' }));
 
 let lastData = 'En attente...';
 let lastDataUID = '';
+let lastTrain = '';
 const trainMapPath = path.join(__dirname, 'train-map.json');
 let trainMap = {};
 
 function loadTrainMap() {
   try {
     const raw = fs.readFileSync(trainMapPath, 'utf8');
-    trainMap = JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    trainMap = {};
+    // Normalise les clés (retire espaces/séparateurs et uppercase) pour éviter les écarts de format
+    Object.entries(parsed).forEach(([uid, name]) => {
+      trainMap[normalizeUid(uid)] = name;
+    });
   } catch (err) {
     console.error(`Impossible de lire ${trainMapPath}: ${err.message}`);
     trainMap = {};
@@ -32,16 +38,21 @@ loadTrainMap();
 
 parser.on('data', (data) => {
   lastData = data.trim();
+  // Ignore les lignes vides: on garde le dernier train vu
+  if (!lastData) {
+    return;
+  }
   if (lastData.search('UID') !== -1) {
     const parsed = lastData.split(':')[1];
     lastDataUID = parsed ? parsed.trim() : '';
+    lastTrain = trainMap[normalizeUid(lastDataUID)] || '';
     //console.log("Carte detectee :", lastData);
   }
 });
 
 app.get('/data', (req, res) => {
   const uid = lastDataUID;
-  const train = trainMap[normalizeUid(uid)] || '';
+  const train = lastTrain;
   console.log({ uid, train });
   res.json({ uid, train });
 });

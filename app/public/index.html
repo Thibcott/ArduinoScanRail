@@ -9,15 +9,25 @@
   </style>
 </head>
 <body>
-  <h1>🚉 Horaires Mini Gare</h1>
+  <h1>Horaires Mini Gare</h1>
   <div id="data">En attente...</div>
 
   <script>
+    const dataEl = document.getElementById('data');
+
     async function refresh() {
       const res = await fetch('/data');
       const json = await res.json();
-      document.getElementById('data').innerText = json.value;
+      const { uid, train } = json;
+      if (train) {
+        dataEl.innerText = `Train : ${train}`;
+      } else if (uid) {
+        dataEl.innerText = `UID : ${uid}`;
+      } else {
+        dataEl.innerText = 'En attente...';
+      }
     }
+
     setInterval(refresh, 1000);
   </script>
 </body>
