@@ -16,19 +16,13 @@
     const dataEl = document.getElementById('data');
 
     async function refresh() {
-      const res = await fetch('/data');
+      const res = await fetch('/data', { cache: 'no-store' });
       const json = await res.json();
-      const { uid, train } = json;
-      if (train) {
-        dataEl.innerText = `Train : ${train}`;
-      } else if (uid) {
-        dataEl.innerText = `UID : ${uid}`;
-      } else {
-        dataEl.innerText = 'En attente...';
-      }
+      const { train } = json;
+      dataEl.innerText = train ? `Train : ${train}` : 'En attente...';
     }
 
-    setInterval(refresh, 1000);
+    setInterval(refresh, 500);
   </script>
 </body>
 </html>
