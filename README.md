@@ -9,16 +9,16 @@ Mini démonstrateur Arduino + RFID + affichage web inspiré des écrans CFF/SBB.
 
 ## Logiciel requis
 - Node.js 20+
-- Bibliothéque Arduino MFRC522 installée dans léIDE Arduino
+- Bibliothéque Arduino MFRC522 installée dans l'IDE Arduino
 
-## Installation (cété Node)
+## Installation (côté Node)
 `Bash
 cd app
 npm install
 `
 
 ## Configuration
-- Détecter le port série Arduino (ex. COM3, COM4) et léexposer via la variable déenvironnement :
+- Détecter le port série Arduino (ex. COM3, COM4) et l'exposer via la variable d'environnement :
   - Windows PowerShell : setx ARDUINO_PORT COM3
   - Sinon, modifier directement app/server.js (clé serialPath).
 - Mapper les UID RFID aux trains dans app/train-map.json :
@@ -39,12 +39,12 @@ node server.js
 - Les logs série/HTTP séaffichent dans la console (UID lu et train associé).
 
 ## Interface web
-- Ouvrir http://localhost:3000 : léécran imite un panneau CFF et affiche
-  "Entrée en gare du train é" pour le dernier badge détecté.
+- Ouvrir http://localhost:3000 : l'écran imite un panneau CFF et affiche
+  "Entrée en gare du train ..." pour le dernier badge détecté.
 
 ## Arduino (sketch sketch_nov18a.ino)
 - Lit les UID via MFRC522 et les envoie sur le port série é 9600 bauds.
-- Envoie périodiquement une ligne vide séil néy a pas de nouvelle détection.
+- Envoie périodiquement une ligne vide séil n'y a pas de nouvelle détection.
 - Téléverser le sketch depuis léIDE Arduino aprés avoir sélectionné la bonne carte et le bon port.
 
 ## Dépannage
@@ -52,4 +52,4 @@ node server.js
 px serialport-list, puis ajuster ARDUINO_PORT.
 - Fermer tout moniteur série (IDE Arduino) avant de lancer 
 ode server.js.
-- Vérifier les UID bruts dans la console et les comparer é 	rain-map.json (normalisation : espaces/tirets retirés, majuscules).
+- Vérifier les UID bruts dans la console et les comparer : 	rain-map.json (normalisation : espaces/tirets retirés, majuscules).
